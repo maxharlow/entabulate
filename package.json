@@ -1,18 +1,19 @@
 {
-    "name": "ndjson-to-csv",
-    "description": "Convert NDJson format data into CSV. Data is streamed, so files much bigger than the available memory can still be converted. Takes into account nested Json objects.",
-    "version": "1.6.0",
+    "name": "entabulate",
+    "description": "Convert Json files to CSV.",
+    "version": "1.0.0",
     "author": "Max Harlow <contact@maxharlow.com> (https://maxharlow.com/)",
     "license": "Apache-2.0",
     "type": "module",
     "repository": {
         "type": "git",
-        "url": "https://github.com/maxharlow/ndjson-to-csv.git"
+        "url": "https://github.com/maxharlow/entabulate.git"
     },
     "dependencies": {
         "chalk": "5.3.x",
         "flat": "6.0.x",
-        "luxon": "3.4.x",
+        "fs-extra": "11.2.x",
+        "luxon": "3.5.x",
         "ndjson": "2.0.x",
         "scramjet": "4.37.x",
         "simple-wcswidth": "1.0.x",
@@ -20,6 +21,6 @@
         "yargs": "17.7.x"
     },
     "bin": {
-        "ndjson-to-csv": "./bin.js"
+        "entabulate": "./bin.js"
     }
 }

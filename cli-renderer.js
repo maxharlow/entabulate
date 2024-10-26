@@ -100,8 +100,8 @@ function draw(linesDrawn) {
     else events.emit('finished')
 }
 
-function setup(quiet) {
-    const doRedisplay = Process.stdout.isTTY === undefined && Process.stderr.isTTY === true
+function setup(verbose) {
+    const doRedisplay = Process.stdout.isTTY === true && Process.stderr.isTTY === true
     const progress = (key, total) => {
         let ticks = 0
         tickers[key] = {
@@ -125,13 +125,17 @@ function setup(quiet) {
     }
     const alert = details => {
         if (finalisation) return
-        if (quiet && details.importance !== 'error') return
+        if (!verbose && !details.importance) return
         if (!doRedisplay) console.error(details.message)
         const key = details.message
         alerts[key] = details
         isDirty = true
     }
-    const finalise = mode => {
+    const finalise = (mode, e) => {
+        if (e) {
+            alert({ message: `Fatal error: ${e.message}`, importance: 'error' })
+            if (verbose) e.stack.split('\n').slice(1).forEach((line, i) => alert({ message: line, importance: 'error' }))
+        }
         if (!doRedisplay && !finalisation) formatFinalisation(mode).map(text => console.error(text))
         finalisation = mode
         if (doRedisplay) return new Promise(resolve => events.on('finished', resolve))
