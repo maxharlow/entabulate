@@ -11,7 +11,7 @@ async function setup() {
         .option('V', { alias: 'verbose', type: 'boolean', description: 'Print extra information about errors', default: false })
         .help('?').alias('?', 'help')
         .version().alias('v', 'version')
-        .demandCommand(1, '')
+        .demandCommand(2, '')
     const { alert, progress, finalise } = cliRenderer(instructions.argv.verbose)
     try {
         const {
