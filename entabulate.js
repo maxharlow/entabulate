@@ -4,14 +4,16 @@ import NDJson from 'ndjson'
 import StreamArray from 'stream-json/streamers/StreamArray.js'
 import * as Flat from 'flat'
 
-async function detectInput(filename) {
+async function detectInput(filename, formatSpecified) {
     const exists = await FSExtra.pathExists(filename)
     if (!exists) throw new Error(`${filename} doesn\'t exist!`)
-    const matches = filename.toLowerCase().match(/(?<=\.)[a-z0-9]+$/)
+    const matches = formatSpecified ? true : filename.toLowerCase().match(/(?<=\.)[a-z0-9]+$/)
     if (matches) {
-        const extension = matches[0].toUpperCase()
-        const format = extension === 'NDJSON' ? 'JSONL' : extension
-        if (!['JSON', 'JSONL', 'NDJSON'].includes(extension)) throw new Error(`${extension} is not supported as an input`)
+        const extension = formatSpecified ? null : matches[0].toUpperCase()
+        const format = formatSpecified ? formatSpecified.toUpperCase()
+            : extension === 'NDJSON' ? 'JSONL'
+            : extension
+        if (!['JSON', 'JSONL'].includes(format)) throw new Error(`${extension} is not supported as an input`)
         if (format === 'JSON') {
             const file = await FSExtra.open(filename, 'r')
             const firstCharacter = await FSExtra.read(file, Buffer.alloc(1), 0, 1)
@@ -24,14 +26,16 @@ async function detectInput(filename) {
     else throw new Error(`${filename} must include an extension or be a directory`)
 }
 
-async function detectOutput(filename) {
+async function detectOutput(filename, formatSpecified) {
     const exists = await FSExtra.pathExists(filename)
     if (exists) throw new Error(`${filename} already exists!`)
-    const matches = filename.toLowerCase().match(/(?<=\.)[a-z0-9]+$/)
+    const matches = formatSpecified ? true : filename.toLowerCase().match(/(?<=\.)[a-z0-9]+$/)
     if (matches) {
-        const extension = matches[0].toUpperCase()
-        if (!['CSV', 'JSONL', 'NDJSON'].includes(extension)) throw new Error(`${extension} is not supported as an output`)
-        const format = extension === 'NDJSON' ? 'JSONL' : extension
+        const extension = formatSpecified ? null : matches[0].toUpperCase()
+        const format = formatSpecified ? formatSpecified.toUpperCase()
+            : extension === 'NDJSON' ? 'JSONL'
+            : extension
+        if (!['CSV', 'JSONL'].includes(format)) throw new Error(`${extension} is not supported as an output`)
         return { isFile: true, format }
     }
     else throw new Error(`${filename} must include an extension`)
@@ -106,9 +110,9 @@ async function write(data, headers, filename, type) {
     else throw new Error(`${type.format} output failure`) // should never be reached
 }
 
-async function run(input, output, progress = null) {
-    const inputType = await detectInput(input)
-    const outputType = await detectOutput(output)
+async function run(input, inputFormat, output, outputFormat, progress = null) {
+    const inputType = await detectInput(input, inputFormat)
+    const outputType = await detectOutput(output, outputFormat)
     if (inputType.format === outputType.format) throw new Error(`input and output formats are both ${inputType.format}`)
     const total = !progress ? null : await length(read(input, inputType))
     const headersData = read(input, inputType)

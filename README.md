@@ -20,7 +20,7 @@ Alternatively, don't install it and just prepend the command with `npx`.
 Usage
 -----
 
-Entabulate figures out what to do based on file extensions.
+Entabulate figures out what to do based on file extensions by default.
 
 Convert a Json Lines file to CSV:
 
@@ -41,3 +41,5 @@ Convert a folder of Json files to a single Json Lines file:
 Convert a folder of Json files to a CSV file:
 
     $ entabulate in-folder out.csv
+
+You can override this behaviour by specifying an input or output format with `-i` and `-o`.

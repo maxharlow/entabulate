@@ -7,6 +7,8 @@ async function setup() {
     const instructions = Yargs(Process.argv.slice(2))
         .usage('Usage: entabulate <input> <output>')
         .wrap(null)
+        .option('i', { alias: 'input-format', type: 'string', description: 'Input format', choices: ['jsonl', 'json', 'json-directory'] })
+        .option('o', { alias: 'output-format', type: 'string', description: 'Output format', choices: ['csv', 'jsonl'] })
         .option('q', { alias: 'quiet', type: 'boolean', description: 'Don\'t print out progress (faster)', default: false })
         .option('V', { alias: 'verbose', type: 'boolean', description: 'Print extra information about errors', default: false })
         .help('?').alias('?', 'help')
@@ -16,6 +18,8 @@ async function setup() {
     try {
         const {
             _: [input, output],
+            inputFormat,
+            outputFormat,
             quiet,
             verbose
         } = instructions.argv
@@ -23,7 +27,7 @@ async function setup() {
             message: 'Starting up...',
             importance: 'info'
         })
-        await run(input, output, quiet ? null : progress)
+        await run(input, inputFormat, output, outputFormat, quiet ? null : progress)
         await finalise('complete')
     }
     catch (e) {
