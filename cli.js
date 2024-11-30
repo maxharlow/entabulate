@@ -5,7 +5,7 @@ import cliRenderer from './cli-renderer.js'
 
 async function setup() {
     const instructions = Yargs(Process.argv.slice(2))
-        .usage('Usage: entabulate <input> <output>')
+        .usage('Usage: entabulate <input> [output]')
         .wrap(null)
         .option('i', { alias: 'input-format', type: 'string', description: 'Input format', choices: ['jsonl', 'json', 'json-directory'] })
         .option('o', { alias: 'output-format', type: 'string', description: 'Output format', choices: ['csv', 'jsonl'] })
@@ -13,7 +13,7 @@ async function setup() {
         .option('V', { alias: 'verbose', type: 'boolean', description: 'Print extra information about errors', default: false })
         .help('?').alias('?', 'help')
         .version().alias('v', 'version')
-        .demandCommand(2, '')
+        .demandCommand(1, '')
     const { alert, progress, finalise } = cliRenderer(instructions.argv.verbose)
     try {
         const {
@@ -27,7 +27,7 @@ async function setup() {
             message: 'Starting up...',
             importance: 'info'
         })
-        await run(input, inputFormat, output, outputFormat, quiet ? null : progress)
+        await run(input, inputFormat, output || '/dev/stdout', outputFormat, quiet ? null : progress)
         await finalise('complete')
     }
     catch (e) {

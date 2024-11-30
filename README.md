@@ -20,7 +20,7 @@ Alternatively, don't install it and just prepend the command with `npx`.
 Usage
 -----
 
-Entabulate figures out what to do based on file extensions by default.
+Entabulate figures out what to do based on file extensions by default. If output isn't specified it will default to CSV and `stdout`.
 
 Convert a Json Lines file to CSV:
 

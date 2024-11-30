@@ -28,7 +28,7 @@ async function detectInput(filename, formatSpecified) {
 
 async function detectOutput(filename, formatSpecified) {
     const exists = await FSExtra.pathExists(filename)
-    if (exists) throw new Error(`${filename} already exists!`)
+    if (exists && filename !== '/dev/stdout') throw new Error(`${filename} already exists!`)
     const matches = formatSpecified ? true : filename.toLowerCase().match(/(?<=\.)[a-z0-9]+$/)
     if (matches) {
         const extension = formatSpecified ? null : matches[0].toUpperCase()
@@ -38,7 +38,7 @@ async function detectOutput(filename, formatSpecified) {
         if (!['CSV', 'JSONL'].includes(format)) throw new Error(`${extension} is not supported as an output`)
         return { isFile: true, format }
     }
-    else throw new Error(`${filename} must include an extension`)
+    else return { isFile: true, format: 'CSV' }
 }
 
 function extract(object, path) {
