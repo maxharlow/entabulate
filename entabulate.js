@@ -7,6 +7,8 @@ import * as Flat from 'flat'
 async function detectInput(filename, formatSpecified) {
     const exists = await FSExtra.pathExists(filename)
     if (!exists) throw new Error(`${filename} doesn\'t exist!`)
+    const stats = await FSExtra.stat(filename)
+    if (stats.isDirectory()) return { isDirectory: true } // whatever format specified, if it's a directory treat it as such
     const matches = formatSpecified ? true : filename.toLowerCase().match(/(?<=\.)[a-z0-9]+$/)
     if (matches) {
         const extension = formatSpecified ? null : matches[0].toUpperCase()
@@ -17,12 +19,10 @@ async function detectInput(filename, formatSpecified) {
         if (format === 'JSON') {
             const file = await FSExtra.open(filename, 'r')
             const firstCharacter = await FSExtra.read(file, Buffer.alloc(1), 0, 1)
-            if (firstCharacter.buffer.toString() !== '[') throw new Error('Json input does not contain a top-level array')
+            if (firstCharacter.buffer.toString() !== '[') throw new Error('Json input does not contain a top-level array (is it JsonL?)')
         }
         return { isFile: true, format }
     }
-    const stats = await FSExtra.stat(filename)
-    if (stats.isDirectory) return { isDirectory: true }
     else throw new Error(`${filename} must include an extension or be a directory`)
 }
 

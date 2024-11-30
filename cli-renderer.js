@@ -101,7 +101,7 @@ function draw(linesDrawn) {
 }
 
 function setup(verbose) {
-    const doRedisplay = Process.stdout.isTTY === undefined && Process.stderr.isTTY === true
+    const doRedisplay = Process.stdout.isTTY === true && Process.stderr.isTTY === true
     const progress = (key, total) => {
         let ticks = 0
         tickers[key] = {
