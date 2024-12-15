@@ -17,7 +17,7 @@
         "ndjson": "2.0.x",
         "scramjet": "4.37.x",
         "simple-wcswidth": "1.0.x",
-        "stream-json": "1.8.x",
+        "stream-json": "1.9.x",
         "yargs": "17.7.x"
     },
     "bin": {
