@@ -21,6 +21,6 @@
         "yargs": "17.7.x"
     },
     "bin": {
-        "entabulate": "./bin.js"
+        "entabulate": "bin.js"
     }
 }
