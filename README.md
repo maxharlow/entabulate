@@ -9,6 +9,11 @@ Data is streamed, so inputs that are larger than your available memory can be co
 
 Outputs can be CSV or Json Lines.
 
+Completions for Zsh will also be installed if a directory exists:
+
+    $ mkdir -p /usr/local/share/zsh/site-functions
+    $ chown -R $(whoami) /usr/local/share/zsh/site-functions
+
 
 Installing
 ----------

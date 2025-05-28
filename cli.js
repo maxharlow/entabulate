@@ -7,6 +7,7 @@ async function setup() {
     const instructions = Yargs(Process.argv.slice(2))
         .usage('Usage: entabulate <input> [output]')
         .wrap(null)
+        .completion('completion', false)
         .option('i', { alias: 'input-format', type: 'string', description: 'Input format', choices: ['jsonl', 'json', 'json-directory'] })
         .option('o', { alias: 'output-format', type: 'string', description: 'Output format', choices: ['csv', 'jsonl'] })
         .option('q', { alias: 'quiet', type: 'boolean', description: 'Don\'t print out progress (faster)', default: false })
@@ -14,6 +15,7 @@ async function setup() {
         .help('?').alias('?', 'help')
         .version().alias('v', 'version')
         .demandCommand(1, '')
+    if (instructions.argv['get-yargs-completions']) Process.exit(0)
     const { alert, progress, finalise } = cliRenderer(instructions.argv.verbose)
     try {
         const {

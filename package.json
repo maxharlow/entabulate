@@ -22,5 +22,9 @@
     },
     "bin": {
         "entabulate": "bin.js"
+    },
+    "scripts": {
+        "postinstall": "entabulate completion > /usr/local/share/zsh/site-functions/_entabulate || true",
+        "postuninstall": "rm -f /usr/local/share/zsh/site-functions/_entabulate"
     }
 }
