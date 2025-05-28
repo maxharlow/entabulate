@@ -10,15 +10,15 @@
         "url": "https://github.com/maxharlow/entabulate.git"
     },
     "dependencies": {
-        "chalk": "5.3.x",
+        "chalk": "5.4.x",
         "flat": "6.0.x",
-        "fs-extra": "11.2.x",
-        "luxon": "3.5.x",
+        "fs-extra": "11.3.x",
+        "luxon": "3.6.x",
         "ndjson": "2.0.x",
         "scramjet": "4.37.x",
         "simple-wcswidth": "1.0.x",
         "stream-json": "1.9.x",
-        "yargs": "17.7.x"
+        "yargs": "18.0.x"
     },
     "bin": {
         "entabulate": "bin.js"
