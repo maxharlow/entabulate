@@ -1,7 +1,7 @@
 import FSExtra from 'fs-extra'
 import Scramjet from 'scramjet'
-import NDJson from 'ndjson'
-import StreamArray from 'stream-json/streamers/StreamArray.js'
+import StreamJsonArray from 'stream-json/streamers/StreamArray.js'
+import StreamJsonValues from 'stream-json/streamers/StreamValues.js'
 import Papaparse from 'papaparse'
 import * as Flat from 'flat'
 
@@ -20,7 +20,7 @@ async function detectInput(filename, formatSpecified) {
         if (format === 'JSON') {
             const file = await FSExtra.open(filename, 'r')
             const firstCharacter = await FSExtra.read(file, Buffer.alloc(1), 0, 1)
-            if (firstCharacter.buffer.toString() !== '[') throw new Error('Json input does not contain a top-level array (is it JsonL?)')
+            if (firstCharacter.buffer.toString() === '[') return { isFile: true, format: 'JSON-ARRAY' }
         }
         return { isFile: true, format }
     }
@@ -65,17 +65,20 @@ async function* walk(directory) {
 
 function read(filename, type) {
     if (type.format === 'JSON') {
-        return Scramjet.DataStream.from(FSExtra.createReadStream(filename)
-            .pipe(StreamArray.withParser()))
-            .map(entry => entry.value)
+        const source = FSExtra.createReadStream(filename).pipe(StreamJsonValues.withParser())
+        return Scramjet.DataStream.from(source).map(entry => entry.value)
+    }
+    if (type.format === 'JSON-ARRAY') {
+        const source = FSExtra.createReadStream(filename).pipe(StreamJsonArray.withParser())
+        return Scramjet.DataStream.from(source).map(entry => entry.value)
     }
     if (type.format === 'JSONL') {
-        return Scramjet.DataStream.from(FSExtra.createReadStream(filename)
-            .pipe(NDJson.parse()))
+        const source = FSExtra.createReadStream(filename).pipe(StreamJsonValues.withParser())
+        return Scramjet.DataStream.from(source).map(entry => entry.value)
     }
     if (type.format === 'CSV') {
-        return Scramjet.DataStream.from(FSExtra.createReadStream(filename)
-            .pipe(Papaparse.parse(Papaparse.NODE_STREAM_INPUT, { header: true })))
+        const source = FSExtra.createReadStream(filename).pipe(Papaparse.parse(Papaparse.NODE_STREAM_INPUT, { header: true }))
+        return Scramjet.DataStream.from(source)
     }
     if (type.isDirectory) {
         return Scramjet.DataStream.from(walk(filename))
