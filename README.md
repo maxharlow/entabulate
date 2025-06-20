@@ -39,6 +39,10 @@ Convert a Json file containing a top-level array to Json Lines:
 
     $ entabulate in.json out.jsonl
 
+Convert a CSV file to Json Lines:
+
+    $ entabulate in.csv out.jsonl
+
 Convert a folder of Json files to a single Json Lines file:
 
     $ entabulate in-folder out.jsonl

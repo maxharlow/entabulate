@@ -2,6 +2,7 @@ import FSExtra from 'fs-extra'
 import Scramjet from 'scramjet'
 import NDJson from 'ndjson'
 import StreamArray from 'stream-json/streamers/StreamArray.js'
+import Papaparse from 'papaparse'
 import * as Flat from 'flat'
 
 async function detectInput(filename, formatSpecified) {
@@ -15,7 +16,7 @@ async function detectInput(filename, formatSpecified) {
         const format = formatSpecified ? formatSpecified.toUpperCase()
             : extension === 'NDJSON' ? 'JSONL'
             : extension
-        if (!['JSON', 'JSONL'].includes(format)) throw new Error(`${extension} is not supported as an input`)
+        if (!['JSON', 'JSONL', 'CSV'].includes(format)) throw new Error(`${extension} is not supported as an input`)
         if (format === 'JSON') {
             const file = await FSExtra.open(filename, 'r')
             const firstCharacter = await FSExtra.read(file, Buffer.alloc(1), 0, 1)
@@ -71,6 +72,10 @@ function read(filename, type) {
     if (type.format === 'JSONL') {
         return Scramjet.DataStream.from(FSExtra.createReadStream(filename)
             .pipe(NDJson.parse()))
+    }
+    if (type.format === 'CSV') {
+        return Scramjet.DataStream.from(FSExtra.createReadStream(filename)
+            .pipe(Papaparse.parse(Papaparse.NODE_STREAM_INPUT, { header: true })))
     }
     if (type.isDirectory) {
         return Scramjet.DataStream.from(walk(filename))
