@@ -16,7 +16,7 @@
         "luxon": "3.6.x",
         "ndjson": "2.0.x",
         "scramjet": "4.37.x",
-        "simple-wcswidth": "1.0.x",
+        "simple-wcswidth": "1.1.x",
         "stream-json": "1.9.x",
         "yargs": "18.0.x"
     },
