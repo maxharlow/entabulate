@@ -25,30 +25,40 @@ Alternatively, don't install it and just prepend the command with `npx`.
 Usage
 -----
 
-Entabulate figures out what to do based on file extensions by default. If output isn't specified it will default to CSV and `stdout`.
+Entabulate figures out what to do based on file extensions by default. You can override this behaviour by specifying an input or output format with `-i` and `-o`. If output isn't specified it will default to CSV and `stdout`.
 
-Convert a Json Lines file to CSV:
+### From Json Lines
+
+Convert to CSV:
 
     $ entabulate in.jsonl out.csv
 
-Convert a Json file containing a top-level array to CSV:
+### From Json
+
+If the input has a top-level array, it will be split so the output has multiple rows. If not, the output will just have one row.
+
+Convert to CSV:
 
     $ entabulate in.json out.csv
 
-Convert a Json file containing a top-level array to Json Lines:
+Convert to Json Lines:
 
     $ entabulate in.json out.jsonl
 
-Convert a CSV file to Json Lines:
+### From CSV
+
+Convert to Json Lines:
 
     $ entabulate in.csv out.jsonl
 
-Convert a folder of Json files to a single Json Lines file:
+### From a folder of Json files
 
-    $ entabulate in-folder out.jsonl
+Folders with sub-folders are supported.
 
-Convert a folder of Json files to a CSV file:
+Convert to CSV:
 
     $ entabulate in-folder out.csv
 
-You can override this behaviour by specifying an input or output format with `-i` and `-o`.
+Convert to Json Lines:
+
+    $ entabulate in-folder out.jsonl
